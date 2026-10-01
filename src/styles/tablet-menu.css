@@ -1,0 +1,15 @@
+/*
+ * Tablet: Starlight shows a permanent sidebar from 50rem up. PageFrame.astro and MobileMenuToggle.astro are
+ * overridden to keep the hamburger menu until the desktop layout at 72rem instead. These rules are unlayered, so
+ * they win over Starlight's layered styles.
+ */
+@media (min-width: 50rem) and (max-width: 71.99rem) {
+	:root[data-has-sidebar] {
+		--sl-content-inline-start: 0rem;
+	}
+
+	/* The social/language footer is hidden from 50rem up by default; it belongs in the tablet menu too. */
+	.sidebar-pane .md\:sl-hidden {
+		display: block;
+	}
+}

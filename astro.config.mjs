@@ -3,6 +3,7 @@ import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 import starlightLinksValidator from "starlight-links-validator";
 import mermaid from "astro-mermaid";
+import { unified } from "@astrojs/markdown-remark";
 
 function collapsed(isCollapsed = false, sidebarItems) {
   return sidebarItems.map((item) => {
@@ -17,7 +18,7 @@ function collapsed(isCollapsed = false, sidebarItems) {
     if (item.autogenerate) {
       return {
         ...item,
-        collapsed: isCollapsed,
+        autogenerate: { ...item.autogenerate, collapsed: isCollapsed },
       };
     }
 
@@ -46,6 +47,8 @@ const googleTagManagerBody = isDev
 
 export default defineConfig({
   site: "https://glide.valkey.io",
+  // astro-mermaid registers a rehype plugin, which only the unified processor runs (not the default Sätteri one).
+  markdown: { processor: unified() },
   integrations: [
     mermaid({
       theme: "default",
@@ -54,7 +57,13 @@ export default defineConfig({
     starlight({
       title: "Valkey Glide",
       head: [...googleTagManagerHeader],
-      components: { ...googleTagManagerBody },
+      routeMiddleware: "./src/routeData.ts",
+      components: {
+        ...googleTagManagerBody,
+        Header: "./src/components/SiteHeader.astro",
+        PageFrame: "./src/components/PageFrame.astro",
+        MobileMenuToggle: "./src/components/TabletMenuToggle.astro",
+      },
       logo: {
         light: "./src/assets/valkey-glide-logo-with-name-light.svg",
         dark: "./src/assets/valkey-glide-logo-with-name-dark.svg",
@@ -71,7 +80,11 @@ export default defineConfig({
           ],
         }),
       ],
-      customCss: ["./src/styles/custom.css"],
+      customCss: [
+        "./src/styles/custom.css",
+        "./src/styles/home.css",
+        "./src/styles/tablet-menu.css",
+      ],
       favicon: "/favicon-32x32.png",
       editLink: {
         baseUrl: "https://github.com/valkey-io/valkey-glide-docs/edit/main/",
@@ -115,7 +128,7 @@ export default defineConfig({
             {
               label: "Core Features",
               collapsed: true,
-              autogenerate: { directory: "concepts/client-features" },
+              items: [{ autogenerate: { directory: "concepts/client-features" } }],
             },
             {
               label: "Tutorials",
@@ -126,11 +139,11 @@ export default defineConfig({
                 },
                 {
                   label: "Lua Scripting",
-                  autogenerate: { directory: "tutorials/lua-scripting" },
+                  items: [{ autogenerate: { directory: "tutorials/lua-scripting" } }],
                 },
                 {
                   label: "Pub/Sub",
-                  autogenerate: { directory: "tutorials/pubsub" },
+                  items: [{ autogenerate: { directory: "tutorials/pubsub" } }],
                 },
               ],
             },
