@@ -18,18 +18,20 @@
     "format:check:non-mdx": "prettier --check .",
     "format:check:mdx": "bash scripts/check-format.sh",
     "format:check": "pnpm run format:check:non-mdx && pnpm run format:check:mdx",
-    "test-deploy": "pnpm build && ./test-deploy.sh"
+    "test-deploy": "pnpm build && ./test-deploy.sh",
+    "build:relative": "astro build && node scripts/relativize-public-paths.mjs dist"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.4",
-    "@astrojs/starlight": "^0.35.2",
-    "astro": "^5.6.1",
+    "@astrojs/markdown-remark": "^7.3.1",
+    "@astrojs/mdx": "^8.0.2",
+    "@astrojs/starlight": "^0.42.5",
+    "astro": "^7.3.5",
     "astro-mermaid": "^1.0.4",
     "isomorphic-dompurify": "^2.35.0",
     "marked": "^17.0.1",
     "mermaid": "^11.10.1",
-    "sharp": "^0.34.2",
-    "starlight-links-validator": "0.19.2"
+    "sharp": "^0.35.5",
+    "starlight-links-validator": "0.26.0"
   },
   "devDependencies": {
     "prettier": "3.6.2",
